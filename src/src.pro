@@ -2,7 +2,7 @@ QT -= gui
 QT += dbus
 QT += xml
 CONFIG += link_pkgconfig
-TARGET = dtkcore
+TARGET = dtkcore5.5
 
 # 龙芯架构上没有默认添加PT_GNU_STACK-section,所以此处手动指定一下
 contains(QMAKE_HOST.arch, mips.*): QMAKE_LFLAGS_SHLIB += "-Wl,-z,noexecstack"

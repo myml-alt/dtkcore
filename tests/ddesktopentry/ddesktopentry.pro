@@ -12,9 +12,9 @@ CONFIG -= app_bundle
 
 load(dtk_testcase)
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../src/release/ -ldtkcore -lgtest
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../src/debug/ -ldtkcore -lgtest
-else:unix: LIBS += -L$$OUT_PWD/../../src/ -ldtkcore -lgtest
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../src/release/ -ldtkcore5.5 -lgtest
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../src/debug/ -ldtkcore5.5 -lgtest
+else:unix: LIBS += -L$$OUT_PWD/../../src/ -ldtkcore5.5 -lgtest
 
 INCLUDEPATH += $$PWD/../../src
 DEPENDPATH += $$PWD/../../src

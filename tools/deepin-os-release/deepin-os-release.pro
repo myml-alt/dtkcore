@@ -13,7 +13,7 @@ SOURCES += \
 INCLUDEPATH += ../../src
 DESTDIR = $$_PRO_FILE_PWD_/../../bin
 
-DTK_MODULE_NAME=dtkcore
+DTK_MODULE_NAME=dtkcore5.5
 load(dtk_build_config)
 target.path = $$TOOL_INSTALL_DIR
 

@@ -16,15 +16,15 @@ SOURCES += main.cpp
     DEFINES += DTK_STATIC_LIB
 }
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../src/release/ -ldtkcore
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../src/debug/ -ldtkcore
-else:unix: LIBS += -L$$OUT_PWD/../../src/ -ldtkcore
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../src/release/ -ldtkcore5.5
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../src/debug/ -ldtkcore5.5
+else:unix: LIBS += -L$$OUT_PWD/../../src/ -ldtkcore5.5
 
 INCLUDEPATH += $$PWD/../../src
 DEPENDPATH += $$PWD/../../src
 DESTDIR = $$_PRO_FILE_PWD_/../../bin
 
-DTK_MODULE_NAME=dtkcore
+DTK_MODULE_NAME=dtkcore5.5
 load(dtk_build_config)
 target.path = $$TOOL_INSTALL_DIR
 
