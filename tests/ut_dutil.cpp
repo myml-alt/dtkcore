@@ -76,13 +76,17 @@ TEST_F(ut_DUtil, testLogPath)
     qApp->setOrganizationName("deepin");
     qApp->setApplicationName("deepin-test-dtk");
 
-    DPathBuf logPath(QStandardPaths::standardLocations(QStandardPaths::HomeLocation).first());
+    DPathBuf logPath(QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first());
 
 #ifdef Q_OS_OSX
-    logPath = logPath / "Library" / "Caches" / "deepin" / "deepin-test-dtk" / "deepin-test-dtk.log";
+    logPath = logPath / "deepin" / "deepin-test-dtk" / "deepin-test-dtk.log";
 #else
-    logPath = logPath / ".cache" / "deepin" / "deepin-test-dtk" / "deepin-test-dtk.log";
+    logPath = logPath / "deepin" / "deepin-test-dtk" / "deepin-test-dtk.log";
 #endif
+
+    if (DLogManager::getlogFilePath() != logPath.toString()) {
+        qWarning() << "Expected log path :" << logPath.toString() << "getlogFilePath:" << DLogManager::getlogFilePath();
+    }
 
     ASSERT_EQ(DLogManager::getlogFilePath(), logPath.toString());
 }
