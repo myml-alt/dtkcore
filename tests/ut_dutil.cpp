@@ -79,9 +79,9 @@ TEST_F(ut_DUtil, testLogPath)
     DPathBuf logPath(QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first());
 
 #ifdef Q_OS_OSX
-    logPath = logPath / "deepin" / "deepin-test-dtk" / "deepin-test-dtk.log";
+    logPath = logPath / "deepin-test-dtk.log";
 #else
-    logPath = logPath / "deepin" / "deepin-test-dtk" / "deepin-test-dtk.log";
+    logPath = logPath / "deepin-test-dtk.log";
 #endif
 
     if (DLogManager::getlogFilePath() != logPath.toString()) {
