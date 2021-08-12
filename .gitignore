@@ -5,6 +5,7 @@
 
 # Compiled Dynamic libraries
 *.so
+*.so.5.*
 *.dylib
 
 # Compiled Static libraries
@@ -14,6 +15,7 @@
 
 build*/
 *.pro.user*
+CMakeLists.txt.user
 *.DS_Store
 
 # executeable files
@@ -21,11 +23,9 @@ build*/
 
 src/DtkCores
 src/dtkcore_config.h
-cmake/DtkCore/DtkCoreConfig.cmake
-src/qt_lib_d*.pri
+# src/qt_lib_d*.pri
 
 bin/
 .qmake*
 Makefile
 
-cmake/DtkCore*

@@ -1,0 +1,10 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib/@DTK_DEB_HOST_MULTIARCH@
+includedir=${prefix}/include/libdtk-@CMAKE_PROJECT_VERSION@/DCore@DTK_VERSION_SUFFIX@
+
+Name: DTKCORE@DTK_VERSION_SUFFIX@
+Description: Deepin Tool Kit dtkcore@DTK_VERSION_SUFFIX@ header files
+Version: @CMAKE_PROJECT_VERSION@
+Libs: -ldtkcore@DTK_VERSION_SUFFIX@
+Cflags: -I${includedir}
