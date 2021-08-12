@@ -1,10 +1,18 @@
 # cmake CMakeLists.txt && make -j$(nproc) && sudo make install
 cmake_minimum_required(VERSION 3.10)
+
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/cmake.conf)
+
 add_subdirectory(src)
 add_subdirectory(tools/settings)
 add_subdirectory(tools/deepin-os-release)
 
-include(${CMAKE_CURRENT_LIST_DIR}/cmake/cmake.conf)
+add_custom_target(check)
+add_custom_command(TARGET check
+    COMMAND cd ${CMAKE_CURRENT_LIST_DIR}/tests && qmake -o ${CMAKE_CURRENT_LIST_DIR}/tests/Makefile ${CMAKE_CURRENT_LIST_DIR}/tests/tests.pro LIBS+=-L${CMAKE_CURRENT_LIST_DIR}/obj-${DTK_DEB_HOST_MULTIARCH}/src
+    COMMAND cd ${CMAKE_CURRENT_LIST_DIR}/tests && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CMAKE_CURRENT_LIST_DIR}/obj-${DTK_DEB_HOST_MULTIARCH}/src && make check
+)
+add_dependencies(check dtkcore${DTK_VERSION_SUFFIX})
 
 install(
     FILES
