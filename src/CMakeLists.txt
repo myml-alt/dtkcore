@@ -1,12 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
-# cmake -S . -B build -DCMAKE_INSTALL_PREFIX=`pwd`/build/out
-# Generate shared library: cmake -DBUILD_SHARED_LIBS:BOOL=ON  CMakeLists.txt
-# Generate static library: cmake -DBUILD_SHARED_LIBS:BOOL=OFF CMakeLists.txt
-
-include(${CMAKE_CURRENT_LIST_DIR}/../cmake/cmake.conf)
+include(../cmake/config.cmake)
 
 project(dtkcore${DTK_VERSION_SUFFIX} VERSION ${DTK_CORE_VERSION} LANGUAGES CXX)
+
+include(../cmake/dtkcore_common.cmake)
 
 # Qt >= 5.11.3
 set(REQUIRED_QT_VERSION 5.11.3)
@@ -15,30 +13,14 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-add_definitions(
-    -D_REENTRANT
-    -DQT_MESSAGELOGCONTEXT
-    -DLIBDTKCORE_LIBRARY
-    -DDTK_LIB_DIR_NAME=\"libdtk-${PROJECT_VERSION}\"
-    -DDCORE_TRANSLATIONS_PATH=\"/usr/share/libdtk-${PROJECT_VERSION}/DCore${DTK_VERSION_SUFFIX}/translations\"
-    -DDCORE_TRANSLATIONS_DIR=\"libdtk-${PROJECT_VERSION}/DCore${DTK_VERSION_SUFFIX}/translations\"
-    -DLIBDTKCORE_LIBRARY
-    -DQT_NO_DEBUG
-    -DQT_NO_KEYWORDS
-    -DQT_DBUS_LIB
-    -DQT_XML_LIB
-    -DQT_CORE_LIB
-)
+add_definitions(-DQT_NO_KEYWORDS)
 
-find_package(Qt5 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core DBus Xml Concurrent)
-find_library(QGSETTINGS_LIB gsettings-qt)
-
-set(Qt_LIBS
-    Qt5::Core
-    Qt5::DBus
-    Qt5::Xml
-    Qt5::Concurrent
-)
+if (DTK_HAS_UNIT_TEST)
+    set(GCC_COVERAGE_COMPILE_FLAGS "-fprofile-arcs -ftest-coverage")
+    set(GCC_COVERAGE_LINK_FLAGS "-lgcov")
+endif()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
+# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
 include_directories(base filesystem log settings util)
 
@@ -245,7 +227,7 @@ else()
     add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCES} ${RESOURCES})
 endif()
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ${Qt_LIBS} ${QGSETTINGS_LIB} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${DTKCORE_COMMON_LIBS} ${QGSETTINGS_LIB} ${CMAKE_THREAD_LIBS_INIT})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_VISIBILITY_PRESET hidden)
 set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
@@ -259,7 +241,6 @@ set(INSTALL_HEADERS
 
 # 库文件安装路径
 install(TARGETS ${PROJECT_NAME}
-    EXPORT DtkCoreExport
     LIBRARY DESTINATION lib/${DTK_DEB_HOST_MULTIARCH}
     ARCHIVE DESTINATION lib/${DTK_DEB_HOST_MULTIARCH}
 )
@@ -269,40 +250,36 @@ install(FILES ${INSTALL_HEADERS}
     DESTINATION include/libdtk-${PROJECT_VERSION}/DCore${DTK_VERSION_SUFFIX}
 )
 
-# /usr/include/libdtk-5.4.20/DCore
-set(DCORE_HEADERS_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/include/libdtk-${PROJECT_VERSION}/DCore${DTK_VERSION_SUFFIX})
-
 # generate and install pkgconfig file
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/../cmake/DtkCore${DTK_VERSION_SUFFIX}/dtkcore${DTK_VERSION_SUFFIX}.pc.in
-    ${CMAKE_CURRENT_LIST_DIR}/../cmake/DtkCore${DTK_VERSION_SUFFIX}/dtkcore${DTK_VERSION_SUFFIX}.pc @ONLY
+    ${CMAKE_BINARY_DIR}/cmake/DtkCore${DTK_VERSION_SUFFIX}/dtkcore${DTK_VERSION_SUFFIX}.pc @ONLY
 )
 install(
-    FILES ${CMAKE_CURRENT_LIST_DIR}/../cmake/DtkCore${DTK_VERSION_SUFFIX}/dtkcore${DTK_VERSION_SUFFIX}.pc
+    FILES ${CMAKE_BINARY_DIR}/cmake/DtkCore${DTK_VERSION_SUFFIX}/dtkcore${DTK_VERSION_SUFFIX}.pc
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${DTK_DEB_HOST_MULTIARCH}/pkgconfig
 )
 
 # generate and install qt_lib_dtkcore5.5.pri
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/../cmake/DtkCore${DTK_VERSION_SUFFIX}/qt_lib_dtkcore${DTK_VERSION_SUFFIX}.pri.in
-    ${CMAKE_CURRENT_LIST_DIR}/../cmake/DtkCore${DTK_VERSION_SUFFIX}/qt_lib_dtkcore${DTK_VERSION_SUFFIX}.pri @ONLY
+    ${CMAKE_BINARY_DIR}/cmake/DtkCore${DTK_VERSION_SUFFIX}/qt_lib_dtkcore${DTK_VERSION_SUFFIX}.pri @ONLY
 )
 install(
-    FILES ${CMAKE_CURRENT_LIST_DIR}/../cmake/DtkCore${DTK_VERSION_SUFFIX}/qt_lib_dtkcore${DTK_VERSION_SUFFIX}.pri
+    FILES ${CMAKE_BINARY_DIR}/cmake/DtkCore${DTK_VERSION_SUFFIX}/qt_lib_dtkcore${DTK_VERSION_SUFFIX}.pri
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${DTK_DEB_HOST_MULTIARCH}/qt5/mkspecs/modules
 )
 
-# generate DtkCoreConfig.cmake
+# generate and install DtkCore5.5Config.cmake
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/../cmake/DtkCore${DTK_VERSION_SUFFIX}/DtkCore${DTK_VERSION_SUFFIX}Config.cmake.in
-    ${CMAKE_CURRENT_LIST_DIR}/../cmake/DtkCore${DTK_VERSION_SUFFIX}/DtkCore${DTK_VERSION_SUFFIX}Config.cmake @ONLY
+    ${CMAKE_BINARY_DIR}/cmake/DtkCore${DTK_VERSION_SUFFIX}/DtkCore${DTK_VERSION_SUFFIX}Config.cmake @ONLY
 )
-
-# install cmake to /usr/lib/x86_64-linux-gnu/cmake/Dtk[Core|CMake|Tools]
-install(FILES ${CMAKE_CURRENT_LIST_DIR}/../cmake/DtkCore${DTK_VERSION_SUFFIX}/DtkCore${DTK_VERSION_SUFFIX}Config.cmake
+install(FILES ${CMAKE_BINARY_DIR}/cmake/DtkCore${DTK_VERSION_SUFFIX}/DtkCore${DTK_VERSION_SUFFIX}Config.cmake
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${DTK_DEB_HOST_MULTIARCH}/cmake/DtkCore${DTK_VERSION_SUFFIX}
 )
 
+# install DtkTools5.5 cmake to /usr/lib/x86_64-linux-gnu/cmake/Dtk[Core|CMake|Tools]
 install(FILES ${CMAKE_CURRENT_LIST_DIR}/../cmake/DtkCMake${DTK_VERSION_SUFFIX}/DtkCMake${DTK_VERSION_SUFFIX}Config.cmake
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${DTK_DEB_HOST_MULTIARCH}/cmake/DtkCMake${DTK_VERSION_SUFFIX}
 )
@@ -311,13 +288,4 @@ install(FILES ${CMAKE_CURRENT_LIST_DIR}/../cmake/DtkTools${DTK_VERSION_SUFFIX}/D
     ${CMAKE_CURRENT_LIST_DIR}/../cmake/DtkTools${DTK_VERSION_SUFFIX}/DtkSettingsToolsMacros${DTK_VERSION_SUFFIX}.cmake
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${DTK_DEB_HOST_MULTIARCH}/cmake/DtkTools${DTK_VERSION_SUFFIX}
 )
-
-# install DtkCore.cmake
-install(EXPORT DtkCoreExport
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${DTK_DEB_HOST_MULTIARCH}/cmake/DtkCore${DTK_VERSION_SUFFIX}
-    FILE DtkCore${DTK_VERSION_SUFFIX}.cmake
-    NAMESPACE DtkCore${DTK_VERSION_SUFFIX}::
-)
-
-# TODO: when the CMAKE_INSTALL_PREFIX was specified by user, should install .pc and .cmake file into system directory
 

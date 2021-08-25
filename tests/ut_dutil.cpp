@@ -278,7 +278,7 @@ TEST_F(ut_DUtil, testGroups)
 
     delete settings;
 }
-
+#ifndef OS_VERSION_TEST_FILE
 TEST_F(ut_DUtil, testOsVersion)
 {
     DDesktopEntry entry("/tmp/etc/os-version");
@@ -461,3 +461,4 @@ TEST_F(ut_DUtil, testOsVersion)
 
     QFile::remove("/tmp/etc/os-version");
 }
+#endif

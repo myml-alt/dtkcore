@@ -22,6 +22,8 @@ if (dont_use_default_prefix)
     set(CMAKE_INSTALL_PREFIX "/usr")
 endif()
 
+option(DTK_HAS_UNIT_TEST "Control unit test generate coverage." OFF)
+
 if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "mips64")
     target_compile_options(${PROJECT_NAME} PRIVATE
         "-O3                        \

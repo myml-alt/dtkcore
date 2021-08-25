@@ -16,7 +16,7 @@
  */
 
 #include "ut_dutil.h"
-#include <QGuiApplication>
+#include <QCoreApplication>
 
 int main(int argc, char *argv[])
 {
