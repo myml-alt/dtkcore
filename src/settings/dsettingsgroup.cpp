@@ -16,6 +16,7 @@
  */
 
 #include "dsettingsgroup.h"
+#include "dsettingsoption.h"
 
 #include <QMap>
 #include <QJsonObject>

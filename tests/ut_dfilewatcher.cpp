@@ -24,6 +24,7 @@
 #include <QSignalSpy>
 #include <QTest>
 #include <QUrl>
+#include <QTextStream>
 #include "filesystem/dfilewatcher.h"
 
 DCORE_USE_NAMESPACE

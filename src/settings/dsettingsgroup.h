@@ -20,12 +20,11 @@
 #include <QObject>
 #include <QPointer>
 
-#include "dsettingsoption.h"
-
-#include "dtkcore_global.h"
+#include <dtkcore_global.h>
 
 DCORE_BEGIN_NAMESPACE
 
+class DSettingsOption;
 class DSettingsGroupPrivate;
 class LIBDTKCORESHARED_EXPORT DSettingsGroup : public QObject
 {

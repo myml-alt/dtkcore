@@ -46,6 +46,23 @@ add_executable(${PROJECT_NAME}
     ut_dvtablehook.cpp
     ut_dthreadutils.cpp
     ut_ddesktopentrytest.cpp
+
+
+    ut_ddisksizeformatter.cpp
+    ut_dfilesystemwatcher.cpp
+    ut_dfilewatcher.cpp
+    ut_dfilewatchermanager.cpp
+    ut_dpathbuf.cpp
+    ut_dpinyin.cpp
+    ut_drecentmanager.cpp
+    ut_dsecurestring.cpp
+    ut_dsettings.cpp
+    ut_dstandardpaths.cpp
+    ut_dtimeunitformatter.cpp
+    ut_dtrashmanager.cpp
+    ut_gsettingsbackend.cpp
+    ut_logger.cpp
+    ut_qsettingsbackend.cpp
 )
 
 if (NOT DEFINED ENV{DCORE_BUILD_LIB_PATH})
