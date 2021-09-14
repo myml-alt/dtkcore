@@ -18,7 +18,7 @@
 #include "ut_dutil.h"
 #include <QCoreApplication>
 
-#ifdef QT_DEBUG
+#if (defined QT_DEBUG) && (defined BUILD_WITH_ASAN)
 #include <sanitizer/asan_interface.h>
 #endif
 
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     testing::InitGoogleTest(&argc, argv);
     int ret = RUN_ALL_TESTS();
 
-#ifdef QT_DEBUG
+#if (defined QT_DEBUG) && (defined BUILD_WITH_ASAN)
     __sanitizer_set_report_path("asan.log");
 #endif
 

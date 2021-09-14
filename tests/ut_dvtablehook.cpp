@@ -115,9 +115,11 @@ TEST_F(ut_DVtableHook, fun2ObjectFun)
     delete b;
 }
 
+#ifdef BUILD_WITH_ASAN
 TEST_F(ut_DVtableHook, fun2Fun)
 {
     ASSERT_TRUE(DVtableHook::overrideVfptrFun(&A::test, &test));
     A *a = new A();
     ASSERT_TRUE(a->test(5));
 }
+#endif

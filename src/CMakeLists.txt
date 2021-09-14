@@ -227,6 +227,8 @@ else()
     add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCES} ${RESOURCES})
 endif()
 
+include(../cmake/platform_specific.cmake)
+
 target_link_libraries(${PROJECT_NAME} PUBLIC ${DTKCORE_COMMON_LIBS} ${QGSETTINGS_LIB} ${CMAKE_THREAD_LIBS_INIT})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_VISIBILITY_PRESET hidden)

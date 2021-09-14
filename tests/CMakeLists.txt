@@ -4,12 +4,9 @@ include(../cmake/config.cmake)
 
 project(unit-tests LANGUAGES CXX)
 
+set(DTK_HAS_UNIT_TEST ON)
 include(../cmake/dtkcore_common.cmake)
 
-if (DTK_HAS_UNIT_TEST)
-    set(GCC_COVERAGE_COMPILE_FLAGS "-fprofile-arcs -ftest-coverage")
-    set(GCC_COVERAGE_LINK_FLAGS "-lgcov")
-endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
@@ -26,10 +23,15 @@ include_directories(
     ../src/util
 )
 
-set(CMAKE_CXX_FLAGS
-    "-Wl,--export-dynamic \
-    -g -Wall -fprofile-arcs -ftest-coverage -fsanitize=address -fsanitize-recover=address -O2 -fno-access-control"
-)
+# for asan
+if (NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "mips64")
+    set(BUILD_WITH_ASAN)
+    set(CMAKE_CXX_FLAGS
+        "-g -Wall -fsanitize=address -fsanitize-recover=address"
+    )
+endif()
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--export-dynamic -O2 -fno-access-control")
 
 add_definitions(-DOS_VERSION_TEST_FILE=\"/tmp/etc/os-version\")
 

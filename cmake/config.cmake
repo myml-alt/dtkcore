@@ -23,21 +23,3 @@ if (dont_use_default_prefix)
 endif()
 
 option(DTK_HAS_UNIT_TEST "Control unit test generate coverage." OFF)
-
-if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "mips64")
-    target_compile_options(${PROJECT_NAME} PRIVATE
-        "-O3                        \
-        -ftree-vectorize            \
-        -march=loongson3a           \
-        -mhard-float                \
-        -mno-micromips              \
-        -mno-mips16                 \
-        -flax-vector-conversions    \
-        -mloongson-ext2             \
-        -mloongson-mmi"
-    )
-
-    if (BUILD_SHARED_LIBS)
-        target_compile_options(${PROJECT_NAME} PRIVATE "-Wl,-z,noexecstack")
-    endif()
-endif()

@@ -20,6 +20,12 @@ set(CMAKE_CXX_FLAGS "-pipe -O2 -std=gnu++11 -Wall -Wextra -D_REENTRANT")
 find_package(Qt5 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core DBus Xml Concurrent)
 find_library(QGSETTINGS_LIB gsettings-qt)
 
+# for coverage
+if (DTK_HAS_UNIT_TEST)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov --coverage")
+endif()
+
 set(DTKCORE_COMMON_LIBS
     Qt5::Core
     Qt5::DBus
